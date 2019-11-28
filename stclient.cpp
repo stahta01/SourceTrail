@@ -8,9 +8,8 @@ const wxString stClient::MSG_PING = wxT("ping");
 const wxString stClient::MSG_CURSOR = wxT("moveCursor");
 const wxString stClient::MSG_CREATE_CDB = wxT("createCDB");
 
-stClient::stClient(unsigned int nServerPort, unsigned int nWritePort) : m_pServer(0), m_bConnected(false),
-m_nServerPort(nServerPort),
-m_nWritePort(nWritePort)
+stClient::stClient(unsigned int nServerPort, unsigned int nWritePort)
+   : m_pServer(nullptr), m_bConnected(false), m_nServerPort(nServerPort), m_nWritePort(nWritePort)
 {
 
 }
@@ -33,9 +32,6 @@ bool stClient::SendMessageToSourceTrail(const wxString& sMessage)
 // Create the socket
     wxSocketClient* pSocket = new wxSocketClient();
 
-    // Set up the event handler and subscribe to most events
-    int nId = wxNewId();
-
     // Wait for the connection event
     pSocket->Connect(addr, false);
     pSocket->WaitOnConnect(2);
@@ -49,16 +45,20 @@ bool stClient::SendMessageToSourceTrail(const wxString& sMessage)
         pSocket->Close();
         pSocket->Destroy();
         delete[] pBuffer;
+
+        return true;
     }
+
+    return false;
 }
 
 
 void stClient::HandleMessages(const wxString& sBuffer)
 {
-    Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("HandleMessages: "), sBuffer.c_str()));
+    Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("HandleMessages: '%s'"), sBuffer.c_str()));
     m_sMessageBuffer << sBuffer;
 
-    while(m_sMessageBuffer.empty() == false)
+    while(!m_sMessageBuffer.empty())
     {
         int nFind = m_sMessageBuffer.Find(wxT("<EOM>"));
         if(nFind == wxNOT_FOUND)
@@ -75,11 +75,11 @@ void stClient::HandleMessages(const wxString& sBuffer)
 }
 
 
-void stClient::DecodeMessage(wxString sMessage)
+void stClient::DecodeMessage(const wxString& sMessage)
 {
     Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("DecodeMessage: %s"), sMessage.c_str()));
     wxArrayString asDecode = wxStringTokenize(sMessage, wxT(">>"));
-    for(size_t i = 0; i < asDecode.size(); i++)
+    for(size_t i = 0; i < asDecode.size(); ++i)
     {
         asDecode[i].Trim();
         Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("%d = %s"), i, asDecode[i].c_str()));

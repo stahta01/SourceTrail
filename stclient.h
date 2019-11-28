@@ -15,7 +15,7 @@ class stClient : public wxEvtHandler
         void OnSocketEvent(wxSocketEvent& event);
         void OnServerSocketEvent(wxSocketEvent& event);
         void HandleMessages(const wxString& sBuffer);
-        void DecodeMessage(wxString sMessage);
+        void DecodeMessage(const wxString& sMessage);
 
         void MoveCursor(const wxString& sFile, unsigned long nLine, unsigned long nCol);
 
