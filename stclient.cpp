@@ -39,9 +39,8 @@ bool stClient::SendMessageToSourceTrail(const wxString& sMessage)
     {
         pSocket->SetFlags(wxSOCKET_BLOCK | wxSOCKET_WAITALL);
         Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("SENT: '%s'"), sMessage.c_str()));
-        //FIXME: This is most probably wrong, check the protocol which encoding is required.
-        //       Messages contain filenames and these will break if they are not plain ASCII.
-        const auto raw = sMessage.ToAscii();
+        // Protocol encoding is UTF-8
+        const auto raw = sMessage.utf8_str();
         pSocket->Write(raw, strlen(raw));
         pSocket->Close();
         pSocket->Destroy();
@@ -199,8 +198,8 @@ void stClient::OnSocketEvent(wxSocketEvent& event)
             Manager::Get()->GetLogManager()->Log(wxT("OnSocketEvent: Input"));
             pSock->Read(buf, sizeof(buf));
             count = pSock->LastCount();
-            //FIXME: This is most probably wrong, check the protocol which encoding is used
-            message = wxString::FromAscii(buf, count);
+            // Protocol encoding is UTF-8
+            message = wxString::FromUTF8(buf, count);
             Manager::Get()->GetLogManager()->Log(wxString::Format(
                 wxT("OnSocketEvent: Read %u: %s"),
                 static_cast<unsigned int>(count),
