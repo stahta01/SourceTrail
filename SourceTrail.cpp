@@ -21,6 +21,7 @@ END_EVENT_TABLE()
 
 // constructor
 SourceTrail::SourceTrail()
+    : m_pClient(nullptr), m_FileNewMenu(nullptr)
 {
     // Make sure our resources are available.
     // In the generated boilerplate code we have no resources but when
@@ -29,7 +30,6 @@ SourceTrail::SourceTrail()
     {
         NotifyMissingFile(_T("SourceTrail.zip"));
     }
-    m_FileNewMenu = 0;
     wxLogMessage(wxT("SourceTrail::SourceTrail"));
 }
 
@@ -63,7 +63,7 @@ void SourceTrail::OnRelease(cb_optional bool appShutDown)
     if (m_FileNewMenu)
 	{
 		m_FileNewMenu->Delete(idSetActive);
-		m_FileNewMenu = 0;
+		m_FileNewMenu = nullptr;
 	}
     cbPlugin::OnRelease(appShutDown);
 }
@@ -74,7 +74,7 @@ void SourceTrail::BuildMenu(cb_optional wxMenuBar* menuBar)
     if (m_FileNewMenu)
 	{
 		m_FileNewMenu->Delete(idSetActive);
-		m_FileNewMenu = 0;
+		m_FileNewMenu = nullptr;
 	}
 
     const int pos = menuBar->FindMenu(_("&Edit"));
