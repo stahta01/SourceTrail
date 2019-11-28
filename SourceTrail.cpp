@@ -34,9 +34,7 @@ SourceTrail::SourceTrail()
 }
 
 // destructor
-SourceTrail::~SourceTrail()
-{
-}
+SourceTrail::~SourceTrail() = default;
 
 void SourceTrail::OnAttach()
 {
@@ -53,7 +51,7 @@ void SourceTrail::OnAttach()
     cbPlugin::OnAttach();
 }
 
-void SourceTrail::OnRelease(bool appShutDown)
+void SourceTrail::OnRelease(cb_optional bool appShutDown)
 {
     wxLogMessage(wxT("SourceTrail::OnRelease"));
     // do de-initialization for your plugin
@@ -70,7 +68,7 @@ void SourceTrail::OnRelease(bool appShutDown)
     cbPlugin::OnRelease(appShutDown);
 }
 
-void SourceTrail::BuildMenu(wxMenuBar* menuBar)
+void SourceTrail::BuildMenu(cb_optional wxMenuBar* menuBar)
 {
     wxLogMessage(wxT("SourceTrail::BuildMenu"));
     if (m_FileNewMenu)
@@ -90,7 +88,7 @@ void SourceTrail::BuildMenu(wxMenuBar* menuBar)
         wxLogMessage(_T("Could not find Edit Menu!"));
 }
 
-void SourceTrail::BuildModuleMenu(const ModuleType type, wxMenu* menu, const FileTreeData* data)
+void SourceTrail::BuildModuleMenu(cb_optional const ModuleType type, cb_optional wxMenu* menu, cb_optional const FileTreeData* data)
 {
     if ( !menu || !IsAttached() )
         return;
@@ -103,17 +101,17 @@ void SourceTrail::BuildModuleMenu(const ModuleType type, wxMenu* menu, const Fil
     }
 
 }
-//
-//bool SourceTrail::BuildToolBar(wxToolBar* toolBar)
-//{
-//    //The application is offering its toolbar for your plugin,
-//    //to add any toolbar items you want...
-//    //Append any items you need on the toolbar...
-//    NotImplemented(_T("SourceTrail::BuildToolBar()"));
-//
-//    // return true if you add toolbar items
-//    return false;
-//}
+
+bool SourceTrail::BuildToolBar(cb_optional wxToolBar* toolBar )
+{
+    //The application is offering its toolbar for your plugin,
+    //to add any toolbar items you want...
+    //Append any items you need on the toolbar...
+    NotImplemented(_T("SourceTrail::BuildToolBar()"));
+
+    // return true if you add toolbar items
+    return false;
+}
 
 void SourceTrail::OnSetActive(wxCommandEvent& event)
 {

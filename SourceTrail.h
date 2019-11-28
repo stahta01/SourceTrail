@@ -27,7 +27,7 @@ class SourceTrail : public cbPlugin
         /** Constructor. */
         SourceTrail();
         /** Destructor. */
-        virtual ~SourceTrail();
+        ~SourceTrail() override;
 
 
         /** This method is called by Code::Blocks and is used by the plugin
@@ -37,7 +37,7 @@ class SourceTrail : public cbPlugin
           * just do nothing ;)
           * @param menuBar the wxMenuBar to create items in
           */
-        virtual void BuildMenu(wxMenuBar* menuBar);
+        void BuildMenu(cb_optional wxMenuBar* menuBar) override;
 
         /** This method is called by Code::Blocks core modules (EditorManager,
           * ProjectManager etc) and is used by the plugin to add any menu
@@ -54,7 +54,7 @@ class SourceTrail : public cbPlugin
           * @param menu pointer to the popup menu
           * @param data pointer to FileTreeData object (to access/modify the file tree)
           */
-        virtual void BuildModuleMenu(const ModuleType type, wxMenu* menu, const FileTreeData* data = 0);
+        void BuildModuleMenu(cb_optional const ModuleType type, cb_optional wxMenu* menu, cb_optional const FileTreeData* data = nullptr) override;
 
         /** This method is called by Code::Blocks and is used by the plugin
           * to add any toolbar items it needs on Code::Blocks's toolbar.\n
@@ -64,7 +64,7 @@ class SourceTrail : public cbPlugin
           * @param toolBar the wxToolBar to create items on
           * @return The plugin should return true if it needed the toolbar, false if not
           */
-        //virtual bool BuildToolBar(wxToolBar* toolBar);
+        bool BuildToolBar(cb_optional wxToolBar* toolBar ) override;
     protected:
         /** Any descendent plugin should override this virtual method and
           * perform any necessary initialization. This method is called by
@@ -76,7 +76,7 @@ class SourceTrail : public cbPlugin
           * This means that a plugin might be loaded but <b>not</b> activated...\n
           * Think of this method as the actual constructor...
           */
-        virtual void OnAttach();
+        void OnAttach() override;
 
         /** Any descendent plugin should override this virtual method and
           * perform any necessary de-initialization. This method is called by
@@ -87,7 +87,7 @@ class SourceTrail : public cbPlugin
           *         case *don't* use Manager::Get()->Get...() functions or the
           *         behaviour is undefined...
           */
-        virtual void OnRelease(bool appShutDown);
+        void OnRelease(cb_optional bool appShutDown) override;
 
         void OnSetActive(wxCommandEvent& event);
 
