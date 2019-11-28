@@ -77,12 +77,16 @@ void stClient::HandleMessages(const wxString& sBuffer)
 
 void stClient::DecodeMessage(const wxString& sMessage)
 {
-    Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("DecodeMessage: %s"), sMessage.c_str()));
+    Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("DecodeMessage: '%s'"), sMessage.c_str()));
     wxArrayString asDecode = wxStringTokenize(sMessage, wxT(">>"));
     for(size_t i = 0; i < asDecode.size(); ++i)
     {
         asDecode[i].Trim();
-        Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("%d = %s"), i, asDecode[i].c_str()));
+        Manager::Get()->GetLogManager()->Log(wxString::Format(
+            wxT("%u = %s"),
+            static_cast<unsigned int>(i),
+            asDecode[i].c_str()
+        ));
     }
 
     if(asDecode[0] == MSG_PING)
@@ -100,13 +104,22 @@ void stClient::DecodeMessage(const wxString& sMessage)
     }
     else
     {
-        Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("'%s' != '%s'"), asDecode[0].c_str(), MSG_CURSOR.c_str()));
+        Manager::Get()->GetLogManager()->Log(wxString::Format(
+            wxT("'%s' != '%s'"),
+            asDecode[0].c_str(),
+            MSG_CURSOR.c_str()
+        ));
     }
 }
 
 void stClient::MoveCursor(const wxString& sFile, unsigned long nLine, unsigned long nCol)
 {
-    Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("MoveCursor: %s %d,%d"), sFile.c_str(), nLine, nCol));
+    Manager::Get()->GetLogManager()->Log(wxString::Format(
+        wxT("MoveCursor: %s %u,%u"),
+        sFile.c_str(),
+        static_cast<unsigned int>(nLine),
+        static_cast<unsigned int>(nCol)
+    ));
 
     cbEditor* pEditor = (cbEditor*)Manager::Get()->GetEditorManager()->IsBuiltinOpen(sFile);
     if (!pEditor)
@@ -188,7 +201,11 @@ void stClient::OnSocketEvent(wxSocketEvent& event)
             count = pSock->LastCount();
             //FIXME: This is most probably wrong, check the protocol which encoding is used
             message = wxString::FromAscii(buf, count);
-            Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("OnSocketEvent: Read %d: %s"), count, message.c_str()));
+            Manager::Get()->GetLogManager()->Log(wxString::Format(
+                wxT("OnSocketEvent: Read %u: %s"),
+                static_cast<unsigned int>(count),
+                message.c_str()
+            ));
             HandleMessages(message);
             break;
         // The server hangs up after sending the data
