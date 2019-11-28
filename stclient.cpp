@@ -39,12 +39,12 @@ bool stClient::SendMessageToSourceTrail(const wxString& sMessage)
     {
         pSocket->SetFlags(wxSOCKET_BLOCK | wxSOCKET_WAITALL);
         Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("SENT: '%s'"), sMessage.c_str()));
-        char* pBuffer  = new char[sMessage.length()];
-        strcpy(pBuffer, sMessage.ToAscii());
-        pSocket->Write(pBuffer, sMessage.length());
+        //FIXME: This is most probably wrong, check the protocol which encoding is required.
+        //       Messages contain filenames and these will break if they are not plain ASCII.
+        const auto raw = sMessage.ToAscii();
+        pSocket->Write(raw, strlen(raw));
         pSocket->Close();
         pSocket->Destroy();
-        delete[] pBuffer;
 
         return true;
     }
@@ -177,14 +177,19 @@ void stClient::OnSocketEvent(wxSocketEvent& event)
 {
     Manager::Get()->GetLogManager()->Log(wxT("OnSocketEvent"));
     wxSocketBase * pSock = event.GetSocket();
+    wxString message;
+    unsigned int count = 0;
     char buf[512];
     switch(event.GetSocketEvent())
     {
         case wxSOCKET_INPUT:
             Manager::Get()->GetLogManager()->Log(wxT("OnSocketEvent: Input"));
             pSock->Read(buf, sizeof(buf));
-            Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("OnSocketEvent: Read %d: %s"), pSock->LastCount(), wxString::FromAscii(buf).c_str()));
-            HandleMessages(wxString::FromAscii(buf));
+            count = pSock->LastCount();
+            //FIXME: This is most probably wrong, check the protocol which encoding is used
+            message = wxString::FromAscii(buf, count);
+            Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("OnSocketEvent: Read %d: %s"), count, message.c_str()));
+            HandleMessages(message);
             break;
         // The server hangs up after sending the data
         case wxSOCKET_LOST:
