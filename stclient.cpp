@@ -1,5 +1,7 @@
 #include "stclient.h"
 
+#include <cstring>
+
 #include <wx/tokenzr.h>
 
 #include "sdk.h" // Code::Blocks SDK
@@ -45,7 +47,7 @@ bool stClient::SendMessageToSourceTrail(const wxString& sMessage)
         Manager::Get()->GetLogManager()->Log(wxString::Format(wxT("SENT: '%s'"), sMessage.c_str()));
         // Protocol encoding is UTF-8
         const auto raw = sMessage.utf8_str();
-        pSocket->Write(raw, strlen(raw));
+        pSocket->Write(raw, std::strlen(raw));
         pSocket->Close();
         pSocket->Destroy();
 
