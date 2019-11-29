@@ -1,8 +1,11 @@
-#include "sdk.h" // Code::Blocks SDK
-#include <configurationpanel.h>
 #include "SourceTrail.h"
-#include "stclient.h"
+
 #include <wx/log.h>
+
+#include "sdk.h" // Code::Blocks SDK
+
+#include "stclient.h"
+
 
 // Register the plugin with Code::Blocks.
 // We are using an anonymous namespace so we don't litter the global one.

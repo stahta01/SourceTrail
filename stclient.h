@@ -1,7 +1,16 @@
 #pragma once
+
+// For compilers that support precompilation, includes <wx/wx.h>
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+    #include <wx/wx.h>
+#endif
+
+#include <wx/event.h>
 #include <wx/socket.h>
 #include <wx/string.h>
-#include <wx/event.h>
+
 
 class stClient : public wxEvtHandler
 {
@@ -34,4 +43,3 @@ class stClient : public wxEvtHandler
         static const wxString MSG_CURSOR;
         static const wxString MSG_CREATE_CDB;
 };
-

@@ -1,12 +1,16 @@
 #include "stclient.h"
+
 #include <wx/tokenzr.h>
+
 #include "sdk.h" // Code::Blocks SDK
 #include "cbstyledtextctrl.h"
+
 
 const wxString stClient::MSG_END = wxT("<EOM>");
 const wxString stClient::MSG_PING = wxT("ping");
 const wxString stClient::MSG_CURSOR = wxT("moveCursor");
 const wxString stClient::MSG_CREATE_CDB = wxT("createCDB");
+
 
 stClient::stClient(unsigned int nServerPort, unsigned int nWritePort)
    : m_pServer(nullptr), m_bConnected(false), m_nServerPort(nServerPort), m_nWritePort(nWritePort)
