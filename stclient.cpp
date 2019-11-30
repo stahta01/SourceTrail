@@ -139,7 +139,8 @@ void stClient::MoveCursor(const wxString& sFile, unsigned long nLine, unsigned l
         cbEditor* pInbuilt = Manager::Get()->GetEditorManager()->GetBuiltinActiveEditor();
         pInbuilt->GotoLine(nLine, true);
         cbStyledTextCtrl* pControl = pInbuilt->GetControl();
-        nCol += pControl->PositionFromLine(nLine-1);
+        // These methods need the line and column 0-based, the protocol delivers them 1-based
+        nCol += pControl->PositionFromLine(nLine - 1) - 1;
         pControl->SetCurrentPos(nCol);
         pControl->SetSelection(nCol, nCol);
         pControl->EnsureCaretVisible();
@@ -243,7 +244,8 @@ void stClient::SendLocation()
 
         sFilename.Replace(wxT("\\"), wxT("/"));
 
-        sMessage.Printf(wxT("setActiveToken>>%s>>%d>>%d<EOM>"), sFilename.c_str(), nLine, pControl->GetColumn(nPosition));
+        // The methods deliver the line and column 0-based, the protocol needs them 1-based
+        sMessage.Printf(wxT("setActiveToken>>%s>>%d>>%d<EOM>"), sFilename.c_str(), nLine + 1, pControl->GetColumn(nPosition) + 1);
         SendMessageToSourceTrail(sMessage);
     }
 }
