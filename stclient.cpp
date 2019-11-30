@@ -140,7 +140,8 @@ void stClient::MoveCursor(const wxString& sFile, unsigned long nLine, unsigned l
         pInbuilt->GotoLine(nLine, true);
         cbStyledTextCtrl* pControl = pInbuilt->GetControl();
         // These methods need the line and column 0-based, the protocol delivers them 1-based
-        nCol += pControl->PositionFromLine(nLine - 1) - 1;
+        //TODO: Bug or feature, but the column seems to be 0-based while it is required 1-based on the sending side?
+        nCol += pControl->PositionFromLine(nLine - 1);
         pControl->SetCurrentPos(nCol);
         pControl->SetSelection(nCol, nCol);
         pControl->EnsureCaretVisible();
