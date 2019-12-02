@@ -1,6 +1,9 @@
+#include "sdk.h" // Code::Blocks SDK
+#include <cbeditor.h>
+#include <editormanager.h>
+#include <logmanager.h>
 #include "stclient.h"
 #include <wx/tokenzr.h>
-#include "sdk.h" // Code::Blocks SDK
 #include "cbstyledtextctrl.h"
 
 const wxString stClient::MSG_END = wxT("<EOM>");
